@@ -1,3 +1,27 @@
+/*
+ *  
+ *  Little Sir Echo 
+ *  Android SMS notification reminder app
+ *  - listen for SMSM notifications, set a reminder notification
+ *    to remind after user-defined minutes lapsed.
+ *  
+ *  Copyright (C) 2015  Kaputnik Go
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>. 
+ * 
+ */
+
 package com.cityfreqs.littlesirecho;
 
 import java.util.Calendar;
@@ -29,7 +53,8 @@ import android.widget.TextView;
 
 public class MainActivity extends Activity {
 	/*
-	 * - vers. 2.0
+	 * - version code: 3
+	 * - version name: 2.0
 	 * - min/target API 18 - 4.3
 	 * - S4 4.3.1 (18) - testing use
 	 * - s5 5.1.1 (22) - install only
@@ -47,13 +72,13 @@ public class MainActivity extends Activity {
 	private static final String LISTENER_STRING = "com.cityfreqs.littlesirecho.NOTIFICATION_LISTENER";
 	private static final String ALARM_ACTION = "com.cityfreqs.littlesirecho.alarm";
 	private static final String TAG = "LittleSirEcho";
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false; // release version
 	
 	private LSEServiceReceiver LSEsr;
 	private NotificationCompat.Builder mBuilder;
 	private NotificationManager notificationManager;
 	
-	private static final boolean VERSION_ALARM = true;
+	private static final boolean VERSION_ALARM = false; // testing only
 	private ScheduledExecutorService scheduler;
 	private WakeLock wakeLock;
 	private PendingIntent alarmIntent;
