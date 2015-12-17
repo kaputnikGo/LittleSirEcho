@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Little Sir Echo</string>
+    <string name="service_name">Little Sir Echo</string>
+    
+    <string name="clear_notify">Clear any echoes</string>
+    <string name="listener_title">Little Sir Echo status:</string>
+    <string name="listener_name">listening...</string>
+    
+    <string name="timer_title">Select echo delay:</string>
+    <string name="awake_title">Set awake time start and end hours (24h):</string>
+    <string name="awake_select">Awake hours set:</string>
+    <string name="timer_select">timer set to default 10 mins</string>
+    <string name="debug_wait">30 secs</string>
+    <string name="default_wait">10 mins</string>
+    <string name="third_wait">20 mins</string>
+	<string name="long_wait">30 mins</string>
+    
+
+</resources>
