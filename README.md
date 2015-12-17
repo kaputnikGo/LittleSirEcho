@@ -6,7 +6,7 @@ Andorid SMS notification repeater app
 	 * - S4 4.3.1 (18) - testing use
 	 * - s5 5.1.1 (22) - install only
 
-License
+# License
 
 Copyright 2015 Kaputnik Go
 
