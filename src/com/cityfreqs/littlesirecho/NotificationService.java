@@ -1,5 +1,6 @@
 package com.cityfreqs.littlesirecho;
 
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -23,9 +24,15 @@ public class NotificationService extends NotificationListenerService {
     }
     
     @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+    	this.startForeground(startId, null);
+    	return Service.START_STICKY;
+    }
+    
+    @Override
     public void onDestroy() {
     	super.onDestroy();
-    }
+    }  
     
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {

@@ -32,17 +32,22 @@ import java.util.concurrent.TimeUnit;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.os.PowerManager.WakeLock;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
@@ -50,15 +55,20 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	/*
 	 * - version code: 3
-	 * - version name: 2.0
+	 * - version name: 2.1
 	 * - min/target API 18 - 4.3
 	 * - S4 4.3.1 (18) - testing use
 	 * - s5 5.1.1 (22) - install only
+	 * - added boot listener for auto start
 	 * - TODO:
+	 * - service.START_STICKY
+	 * - shared prefs for user times
+	 * 
 	 * - selector/sys call for user chosen sms app - build API to 19
 	 * - if notify start < awake end, then runs over - need to quiet it till awake start
 	 * - silence after setting (num repeats?)
@@ -72,7 +82,16 @@ public class MainActivity extends Activity {
 	private static final String LISTENER_STRING = "com.cityfreqs.littlesirecho.NOTIFICATION_LISTENER";
 	private static final String ALARM_ACTION = "com.cityfreqs.littlesirecho.alarm";
 	private static final String TAG = "LittleSirEcho";
-	private static final boolean DEBUG = false; // release version
+	private static final boolean DEBUG = true; // release version
+	
+	private static final String SMS = "sms";
+	private static final String MMS = "mms";
+	private static final int DEBUG_WAIT_TIME = 30000; // 30 secs
+	private static final int DEFAULT_WAIT_TIME = 600000; // 10 mins
+	private static final int THIRD_WAIT_TIME = 1200000; // 20 mins
+	private static final int LONG_WAIT_TIME = 1800000; // 30 mins
+	private static final int DEFAULT_AWAKE_START = 7; // 7am
+	private static final int DEFAULT_AWAKE_END = 23; // 11pm
 	
 	private LSEServiceReceiver LSEsr;
 	private NotificationCompat.Builder mBuilder;
@@ -84,23 +103,16 @@ public class MainActivity extends Activity {
 	private PendingIntent alarmIntent;
 	private AlarmManager alarmManager;
 	
+	private SharedPreferences sharedPrefs;
+	
 	private Uri soundUri;
 	private String notifyOwner;
 	private boolean running;
-	private int userSelectedWaitTime;
 	private NumberPicker startHourPicker;
 	private NumberPicker endHourPicker;
+	private int userSelectedWaitTime;
 	private int userAwakeStart;
 	private int userAwakeEnd;
-	
-	private static final String SMS = "sms";
-	private static final String MMS = "mms";
-	private static final int DEBUG_WAIT_TIME = 30000; // 30 secs
-	private static final int DEFAULT_WAIT_TIME = 600000; // 10 mins
-	private static final int THIRD_WAIT_TIME = 1200000; // 20 mins
-	private static final int LONG_WAIT_TIME = 1800000; // 30 mins
-	private static final int DEFAULT_AWAKE_START = 7; // 7am
-	private static final int DEFAULT_AWAKE_END = 23; // 11pm
 
 
     @Override
@@ -116,7 +128,17 @@ public class MainActivity extends Activity {
         userAwakeStart = DEFAULT_AWAKE_START;
         userAwakeEnd = DEFAULT_AWAKE_END;
         
+        checkSettings();
         initLittleSirEcho();        
+    }
+    
+    @Override
+    protected void onStart() {
+    	super.onStart();
+    	sharedPrefs = getSharedPreferences("LSE", MODE_PRIVATE);
+    	Editor editor = sharedPrefs.edit();
+    	editor.putBoolean("activity_run", true);
+    	editor.commit();
     }
     
     @Override
@@ -127,6 +149,18 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
     	super.onPause();
+    }
+    
+    @Override
+    protected void onStop() {
+    	super.onStop();
+    	sharedPrefs = getSharedPreferences("LSE", MODE_PRIVATE);
+    	Editor editor = sharedPrefs.edit();
+    	editor.putBoolean("activity_run", false);
+    	editor.putInt("wait_time", userSelectedWaitTime);
+    	editor.putInt("start_time", userAwakeStart);
+    	editor.putInt("end_time", userAwakeEnd);
+    	editor.commit();
     }
     
     @SuppressLint("Wakelock")
@@ -156,7 +190,7 @@ public class MainActivity extends Activity {
         
         LocalBroadcastManager.getInstance(this).registerReceiver(LSEsr, new IntentFilter(LISTENER_STRING));
         soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);       
+        notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);  
         
         setAwakeView();
         startHourPicker = (NumberPicker) findViewById(R.id.start_hour_picker);
@@ -198,7 +232,40 @@ public class MainActivity extends Activity {
         		}
             }
         });
-    }    
+    } 
+    
+    private void checkSettings() {
+    	if (Settings.Secure.getString(this.getContentResolver(), 
+			   "enabled_notification_listeners").contains(this.getPackageName())) {
+		   
+    	// Notification access service already enabled
+		    Toast.makeText(this,"Little Sir Echo enabled",Toast.LENGTH_LONG).show();
+		} 
+    	else {
+		    // take user to notifications access settings view to allow LSE access
+    		// inform user via dialog about changing settings 		
+    		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    		builder.setTitle(R.string.dialog_title).setMessage(R.string.dialog_message);
+    		builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+    			public void onClick(DialogInterface dialog, int id) {
+    				startActivityForResult(new Intent("android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS"), 0);
+    	        }
+    	    });
+    		builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+    	        public void onClick(DialogInterface dialog, int id) {
+    	        	notEnabled();
+    	        }
+    	    });
+    		
+    		AlertDialog dialog = builder.create();
+    		dialog.show();
+		}
+    }
+    
+    private void notEnabled() {
+    	Toast.makeText(this,"Little Sir Echo NOT enabled",Toast.LENGTH_LONG).show();
+    	
+    }
 /*
  * View Controls   
  */       

@@ -4,6 +4,11 @@
     <string name="app_name">Little Sir Echo</string>
     <string name="service_name">Little Sir Echo</string>
     
+    <string name="dialog_title">Allow access</string>
+    <string name="dialog_message">Open settings window</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string> 
+    
     <string name="clear_notify">Clear any echoes</string>
     <string name="listener_title">Little Sir Echo status:</string>
     <string name="listener_name">listening...</string>
