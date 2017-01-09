@@ -82,7 +82,7 @@ public class MainActivity extends Activity {
 	private static final String LISTENER_STRING = "com.cityfreqs.littlesirecho.NOTIFICATION_LISTENER";
 	private static final String ALARM_ACTION = "com.cityfreqs.littlesirecho.alarm";
 	private static final String TAG = "LittleSirEcho";
-	private static final boolean DEBUG = true; // release version
+	private static final boolean DEBUG = false; // release version
 	
 	private static final String SMS = "sms";
 	private static final String MMS = "mms";
@@ -313,12 +313,13 @@ public class MainActivity extends Activity {
 /*
  * Notification control    
  */    
-    private void logNotification(String owner) {
+    @SuppressLint("DefaultLocale")
+	private void logNotification(String owner) {
     	// only log our owners    	    	    	
     	if (isAwakeTime()) {    	
 	    	if (owner != null) {
 	    		// combine these types into sms
-	    		if ( (owner.contains(SMS)) || (owner.contains(MMS)) ) { 
+	    		if ( (owner.toLowerCase().contains(SMS)) || (owner.toLowerCase().contains(MMS)) ) { 
 	    			// only allow one runnable
 	    	    	if (!running) {
 	    	    		notifyOwner = SMS;
