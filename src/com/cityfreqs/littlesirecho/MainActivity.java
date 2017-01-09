@@ -5,7 +5,7 @@
  *  - listen for SMSM notifications, set a reminder notification
  *    to remind after user-defined minutes lapsed.
  *  
- *  Copyright (C) 2015  Kaputnik Go
+ *  Copyright (C) 2017  Kaputnik Go
  *
  *  This program is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -59,12 +59,12 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	/*
-	 * - version code: 3
-	 * - version name: 2.1
+	 * - version code: 4
+	 * - version name: 2.2
 	 * - min/target API 18 - 4.3
 	 * - S4 4.3.1 (18) - testing use
 	 * - s5 5.1.1 (22) - install only
-	 * - added boot listener for auto start
+	 * - added toLowerCase() for sms/mms name contains
 	 * - TODO:
 	 * - service.START_STICKY
 	 * - shared prefs for user times
