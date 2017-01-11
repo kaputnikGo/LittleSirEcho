@@ -5,6 +5,7 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.IBinder;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.support.v4.content.LocalBroadcastManager;
@@ -29,6 +30,11 @@ public class NotificationService extends NotificationListenerService {
     public int onStartCommand(Intent intent, int flags, int startId) {
     	this.startForeground(startId, null);
     	return Service.START_STICKY;
+    }
+    
+    @Override
+    public IBinder onBind(Intent intent) {
+        return super.onBind(intent);
     }
     
     @Override

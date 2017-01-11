@@ -59,21 +59,12 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	/*
-	 * - version code: 4
-	 * - version name: 2.2
+	 * - version code: 5
+	 * - version name: 2.3
 	 * - min/target API 18 - 4.3
 	 * - S4 4.3.1 (18) - testing use
 	 * - s5 5.1.1 (22) - install only
-	 * - added toLowerCase() for sms/mms name contains
-	 * - TODO:
-	 * - service.START_STICKY
-	 * - shared prefs for user times
-	 * 
-	 * - selector/sys call for user chosen sms app - build API to 19
-	 * - if notify start < awake end, then runs over - need to quiet it till awake start
-	 * - silence after setting (num repeats?)
-	 * - master override on/off switch within activity 
-	 * - alarmManager instead of wakelock runnable
+	 * - added onBind() to notificationService
 	 * 
 	 */
 	private TextView listenerView;
