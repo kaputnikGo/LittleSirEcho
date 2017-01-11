@@ -1,14 +1,12 @@
 # LittleSirEcho
 Android SMS notification repeater app
 
-	 * - vers. 2.1
+	 * - vers. 2.3
 	 * - min/target API 18 - 4.3
 	 * - S4 4.3.1 (18) - testing use
 	 * - s5 5.1.1 (22) - install only
 	 
 Preparing for F-Droid contribution.
-- added boot listener to auto start app after reboot.
-- added install internal only due to boot listener	. 
 
 # License
 
