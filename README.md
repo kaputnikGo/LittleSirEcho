@@ -6,7 +6,10 @@ Android SMS notification repeater app
 	 * - S4 4.3.1 (18) - testing use
 	 * - s5 5.1.1 (22) - install only
 	 
-Preparing for F-Droid contribution.
+<a href="https://f-droid.org/repository/browse/?fdid=com.cityfreqs.littlesirecho" target="_blank">
+<img src="https://f-droid.org/badge/get-it-on.png" height="90"/></a>
+<a href="https://play.google.com/store/apps/details?id=com.cityfreqs.littlesirecho" target="_blank">
+<img src="https://play.google.com/intl/en_us/badges/images/generic/en-play-badge.png" height="90"/></a>
 
 # License
 
