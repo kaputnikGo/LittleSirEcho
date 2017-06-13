@@ -158,7 +158,7 @@ public class MainActivity extends Activity {
 	@Override
     protected void onDestroy() {
     	super.onDestroy();
-		if (wakeLock.isHeld()) {
+		if (wakeLock != null && wakeLock.isHeld()) {
 		    wakeLock.release();
 		    wakeLock = null;
 		}
